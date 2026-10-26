@@ -1,1 +1,76 @@
 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RISKORA Grant Control</title>
+<style>
+:root{--navy:#10243a;--blue:#2563eb;--bg:#f4f7fb;--line:#e2e8f0}
+*{box-sizing:border-box}
+body{margin:0;font:15px Arial,sans-serif;background:var(--bg);color:#17263b}
+header{background:var(--navy);color:white;padding:22px}
+header h1{margin:0;font-size:23px;letter-spacing:1px}
+header p{color:#cbd5e1;margin:7px 0 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+button,select{padding:10px;border:1px solid var(--line);border-radius:8px;background:white;color:#17263b;cursor:pointer}
+header button{background:#fff}
+.layout{display:flex;min-height:calc(100vh - 90px)}
+nav{width:210px;background:white;padding:15px;border-right:1px solid var(--line)}
+nav button{display:block;width:100%;text-align:left;margin:5px 0;border:0}
+nav button.active,nav button:hover{background:#eaf1ff;color:var(--blue)}
+main{padding:24px;flex:1;min-width:0}
+h2{margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+.card{background:white;border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+.metric{font-size:25px;font-weight:bold;margin-top:12px}
+.muted{color:#64748b;font-size:13px}
+table{border-collapse:collapse;width:100%;background:white}
+th,td{padding:12px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:#f8fafc}
+.tablewrap{overflow-x:auto}
+.primary{background:var(--blue);color:white;border:0}
+.status{color:#166534;background:#dcfce7;border-radius:20px;padding:5px 8px;font-size:12px}
+input{padding:10px;border:1px solid var(--line);border-radius:8px;width:100%;margin:5px 0 12px}
+label{font-size:13px;font-weight:bold}
+@media(max-width:650px){.layout{display:block}nav{width:100%;display:flex;overflow-x:auto;gap:5px;border-right:0}nav button{white-space:nowrap;width:auto}main{padding:15px}.top{align-items:flex-start}header{padding:16px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top">
+  <div><h1>RISKORA</h1><p id="subtitle">GRANT CONTROL · Gestion des subventions</p></div>
+  <button onclick="toggleLang()" id="lang">EN</button>
+ </div>
+</header>
+<div class="layout">
+<nav id="nav"></nav>
+<main id="main"></main>
+</div>
+<script>
+let lang="fr",page="dashboard";
+const labels={
+fr:{dashboard:"Tableau de bord",grants:"Subventions",budgets:"Budgets",expenses:"Dépenses",documents:"Documents",deadlines:"Échéances",welcome:"Vue d’ensemble",active:"Subventions actives",budget:"Budget approuvé",spent:"Dépenses enregistrées",balance:"Solde budgétaire",recent:"Subventions récentes",name:"Nom de la subvention",donor:"Bailleur",amount:"Budget approuvé",status:"Statut",add:"Ajouter une subvention",project:"Projet",description:"Description",save:"Ajouter",empty:"Aucune subvention pour le moment.",title:"Nouvelle subvention",expenseTitle:"Suivi des dépenses",budgetTitle:"Suivi des budgets",docsTitle:"Gestion documentaire",deadTitle:"Suivi des échéances",note:"Prototype de démonstration : données conservées uniquement dans cette page.",date:"Date",category:"Catégorie",value:"Montant",file:"Référence du justificatif",due:"Échéance",task:"Exigence ou rapport",addExpense:"Enregistrer une dépense",addDeadline:"Ajouter une échéance",expensesTotal:"Total des dépenses",remaining:"Budget restant",required:"Champs obligatoires"},
+en:{dashboard:"Dashboard",grants:"Grants",budgets:"Budgets",expenses:"Expenses",documents:"Documents",deadlines:"Deadlines",welcome:"Overview",active:"Active grants",budget:"Approved budget",spent:"Recorded expenses",balance:"Budget balance",recent:"Recent grants",name:"Grant name",donor:"Donor",amount:"Approved budget",status:"Status",add:"Add a grant",project:"Project",description:"Description",save:"Add",empty:"No grants yet.",title:"New grant",expenseTitle:"Expense tracking",budgetTitle:"Budget tracking",docsTitle:"Document management",deadTitle:"Deadline tracking",note:"Demo prototype: data is only kept on this page.",date:"Date",category:"Category",value:"Amount",file:"Supporting document reference",due:"Due date",task:"Requirement or report",addExpense:"Record expense",addDeadline:"Add deadline",expensesTotal:"Total expenses",remaining:"Remaining budget",required:"Required fields"}
+};
+let grants=[],expenses=[],deadlines=[];
+const t=k=>labels[lang][k]||k;
+function money(n){return new Intl.NumberFormat(lang==="fr"?"fr-FR":"en-US",{style:"currency",currency:"USD",maximumFractionDigits:2}).format(n)}
+function toggleLang(){lang=lang==="fr"?"en":"fr";render()}
+function go(p){page=p;render()}
+function nav(){let items=["dashboard","grants","budgets","expenses","documents","deadlines"];document.getElementById("nav").innerHTML=items.map(p=>`<button class="${page===p?"active":""}" onclick="go('${p}')">${t(p)}</button>`).join("")}
+function dashboard(){let total=grants.reduce((s,g)=>s+g.amount,0),spent=expenses.reduce((s,e)=>s+e.amount,0);return `<h2>${t("welcome")}</h2><p class="muted">${t("note")}</p><div class="grid"><div class="card">${t("active")}<div class="metric">${grants.length}</div></div><div class="card">${t("budget")}<div class="metric">${money(total)}</div></div><div class="card">${t("spent")}<div class="metric">${money(spent)}</div></div><div class="card">${t("balance")}<div class="metric">${money(total-spent)}</div></div></div><div class="card"><h3>${t("recent")}</h3>${grantTable()}</div>`}
+function grantTable(){if(!grants.length)return `<p>${t("empty")}</p>`;return `<div class="tablewrap"><table><tr><th>${t("name")}</th><th>${t("donor")}</th><th>${t("amount")}</th><th>${t("status")}</th></tr>${grants.map(g=>`<tr><td>${esc(g.name)}</td><td>${esc(g.donor)}</td><td>${money(g.amount)}</td><td><span class="status">${esc(g.status)}</span></td></tr>`).join("")}</table></div>`}
+function grantPage(){return `<h2>${t("grants")}</h2><div class="card"><h3>${t("add")}</h3><form onsubmit="addGrant(event)"><label>${t("name")}</label><input id="gn" required><label>${t("donor")}</label><input id="gd" required><label>${t("project")}</label><input id="gp"><label>${t("amount")}</label><input id="ga" type="number" min="0" step=".01" required><button class="primary">${t("save")}</button></form></div><div class="card">${grantTable()}</div>`}
+function addGrant(e){e.preventDefault();grants.push({name:gn.value,donor:gd.value,project:gp.value,amount:Number(ga.value),status:lang==="fr"?"Active":"Active"});render()}
+function expensePage(){return `<h2>${t("expenseTitle")}</h2><div class="card"><form onsubmit="addExpense(event)"><label>${t("name")}</label><select id="eg" required><option value="">—</option>${grants.map((g,i)=>`<option value="${i}">${esc(g.name)}</option>`).join("")}</select><label>${t("date")}</label><input id="ed" type="date" required><label>${t("category")}</label><input id="ec" required><label>${t("value")}</label><input id="ea" type="number" min="0" step=".01" required><label>${t("file")}</label><input id="ef"><button class="primary">${t("addExpense")}</button></form></div><div class="card"><h3>${t("expensesTotal")}: ${money(expenses.reduce((s,e)=>s+e.amount,0))}</h3>${expenses.length?`<div class="tablewrap"><table><tr><th>${t("name")}</th><th>${t("date")}</th><th>${t("category")}</th><th>${t("value")}</th><th>${t("file")}</th></tr>${expenses.map(e=>`<tr><td>${esc(grants[e.grant]?.name||"")}</td><td>${esc(e.date)}</td><td>${esc(e.category)}</td><td>${money(e.amount)}</td><td>${esc(e.file)}</td></tr>`).join("")}</table></div>`:t("empty")}</div>`}
+function addExpense(e){e.preventDefault();expenses.push({grant:Number(eg.value),date:ed.value,category:ec.value,amount:Number(ea.value),file:ef.value});render()}
+function deadlinePage(){return `<h2>${t("deadTitle")}</h2><div class="card"><form onsubmit="addDeadline(event)"><label>${t("name")}</label><select id="dg" required><option value="">—</option>${grants.map((g,i)=>`<option value="${i}">${esc(g.name)}</option>`).join("")}</select><label>${t("task")}</label><input id="dt" required><label>${t("due")}</label><input id="dd" type="date" required><button class="primary">${t("addDeadline")}</button></form></div><div class="card">${deadlines.length?deadlines.map(d=>`<p><strong>${esc(grants[d.grant]?.name||"")}</strong> — ${esc(d.task)} · ${esc(d.date)}</p>`).join(""):t("empty")}</div>`}
+function addDeadline(e){e.preventDefault();deadlines.push({grant:Number(dg.value),task:dt.value,date:dd.value});render()}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function render(){document.documentElement.lang=lang;document.getElementById("lang").textContent=lang==="fr"?"EN":"FR";document.getElementById("subtitle").textContent=lang==="fr"?"GRANT CONTROL · Gestion des subventions":"GRANT CONTROL · Grant Management";nav();let html=page==="dashboard"?dashboard():page==="grants"?grantPage():page==="expenses"?expensePage():page==="deadlines"?deadlinePage():page==="budgets"?`<h2>${t("budgetTitle")}</h2><div class="card">${grantTable()}</div>`:`<h2>${t("docsTitle")}</h2><div class="card">${t("note")}<p>Les justificatifs seront ajoutés dans une version connectée à un stockage sécurisé.</p></div>`;document.getElementById("main").innerHTML=html}
+render();
+</script>
+</body>
+</html>
+
