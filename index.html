@@ -112,7 +112,91 @@ requirementSaved:"Requirement saved.",deleteLabel:"Delete",
 demo:"Demo data",noBudget:"No budget lines defined."
 }};
 let lang="fr",page="dashboard";
-let grants=[],expenses=[],requirements=[];
+let grants=[],expenses=[],requirements=[],budgetLines=[];
+
+function addBudgetLine(event){
+  event.preventDefault();
+
+  const grantId = document.getElementById("blGrant").value;
+  const name = document.getElementById("blName").value.trim();
+  const amount = Number(document.getElementById("blAmount").value);
+  const currency = grants.find(g => g.id === grantId)?.currency || "USD";
+
+  if(!grantId || !name || amount < 0) return;
+
+  budgetLines.push({
+    id: uid(),
+    grantId,
+    name,
+    amount,
+    currency
+  });
+
+  persist();
+  go("budgets");
+}
+
+function lineSpent(lineId){
+  return expenses
+    .filter(e => e.budgetLineId === lineId)
+    .reduce((sum,e) => sum + Number(e.amount || 0),0);
+}
+
+function detailedBudgetPage(){
+  const form = grants.length ? `
+    <div class="card">
+      <h3>Ajouter une ligne budgétaire</h3>
+      <form onsubmit="addBudgetLine(event)">
+        <label>Subvention</label>
+        <select id="blGrant" required>${grantOptions()}</select>
+
+        <label>Libellé de la ligne</label>
+        <input id="blName" required
+          placeholder="Ex. : Personnel, Transport, Fournitures">
+
+        <label>Budget approuvé</label>
+        <input id="blAmount" type="number" min="0" step=".01" required>
+
+        <button class="primary">Ajouter la ligne</button>
+      </form>
+    </div>` : `<div class="card">${t("noGrant")}</div>`;
+
+  const rows = budgetLines.map(line => {
+    const spent = lineSpent(line.id);
+    const remaining = line.amount - spent;
+    return `<tr>
+      <td>${esc(grantName(line.grantId))}</td>
+      <td>${esc(line.name)}</td>
+      <td>${money(line.amount,line.currency)}</td>
+      <td>${money(spent,line.currency)}</td>
+      <td>${money(remaining,line.currency)}</td>
+      <td>${line.amount ? Math.round(spent/line.amount*100) : 0}%</td>
+      <td><button onclick="removeBudgetLine('${line.id}')">Supprimer</button></td>
+    </tr>`;
+  }).join("");
+
+  return `<h2>Suivi détaillé des budgets</h2>
+    ${form}
+    <div class="card">
+      <div class="tablewrap">
+        <table>
+          <tr>
+            <th>Subvention</th><th>Ligne budgétaire</th>
+            <th>Budget</th><th>Dépenses</th>
+            <th>Solde</th><th>Utilisation</th><th>Action</th>
+          </tr>
+          ${rows || `<tr><td colspan="7">Aucune ligne budgétaire enregistrée.</td></tr>`}
+        </table>
+      </div>
+    </div>`;
+}
+
+function removeBudgetLine(id){
+  if(!confirm("Supprimer cette ligne budgétaire ?")) return;
+  budgetLines = budgetLines.filter(line => line.id !== id);
+  persist();
+  go("budgets");
+}
 const t=k=>T[lang][k]||k;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
