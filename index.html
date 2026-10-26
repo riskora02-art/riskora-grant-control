@@ -257,7 +257,30 @@ function grantPage(edit=null){
  <div class="rowbtn"><button class="primary">${t("save")}</button><button type="button" onclick="go('grants')">${t("cancel")}</button></div>
  </form></div><div class="card">${grantTable()}</div>`;
 }
+
 function saveGrant(e,id){
+  e.preventDefault();
+
+  const old=grants.find(g=>g.id===id);
+  const item={
+    id:id||uid(),
+    name:document.getElementById("gname").value.trim(),
+    donor:document.getElementById("gdonor").value.trim(),
+    project:document.getElementById("gproject").value.trim(),
+    amount:Number(document.getElementById("gamount").value),
+    currency:document.getElementById("gcurrency").value,
+    start:document.getElementById("gstart").value,
+    end:document.getElementById("gend").value,
+    status:document.getElementById("gstatus").value
+  };
+
+  if(old) Object.assign(old,item);
+  else grants.push(item);
+
+  persist();
+  go("grants");
+}
+
   e.preventDefault();
 
   const old=grants.find(g=>g.id===id);
