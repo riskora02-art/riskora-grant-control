@@ -258,13 +258,27 @@ function grantPage(edit=null){
  </form></div><div class="card">${grantTable()}</div>`;
 }
 function saveGrant(e,id){
- e.preventDefault();
- const old=grants.find(g=>g.id===id);
- const item={id:id||uid(),name:document.getElementById("gname").value.trim(),donor:document.getElementById("gdonor").value.trim(),project:document.getElementById("gproject").value.trim(),amount:Number(document.getElementById("gamount").value),currency:document.getElementById("gcurrency").value,start:document.getElementById("gstart").value,end:document.getElementById("gend").value,status:document.getElementById("gstatus").value};
- if(old)Object.assign(old,item);else grants.push(item);
- localStorage.setItem("riskora_demo",JSON.stringify({
-  grants,expenses,requirements,budgetLines
-}));
+  e.preventDefault();
+
+  const old=grants.find(g=>g.id===id);
+  const item={
+    id:id||uid(),
+    name:document.getElementById("gname").value.trim(),
+    donor:document.getElementById("gdonor").value.trim(),
+    project:document.getElementById("gproject").value.trim(),
+    amount:Number(document.getElementById("gamount").value),
+    currency:document.getElementById("gcurrency").value,
+    start:document.getElementById("gstart").value,
+    end:document.getElementById("gend").value,
+    status:document.getElementById("gstatus").value
+  };
+
+  if(old) Object.assign(old,item);
+  else grants.push(item);
+
+  persist();
+  go("grants");
+}
 }
 function editGrant(id){page="grants";document.getElementById("main").innerHTML=grantPage(id)}
 function budgetPage(){
@@ -325,11 +339,32 @@ function removeItem(type,id){
  persist();render();
 }
 function persist(){
- // Prototype only: browser-local storage, not shared or suitable for confidential records.
- try{localStorage.setItem("riskora_demo",JSON.stringify({grants,expenses,requirements}))}catch(e){}
-}
+  try{
+    localStorage.setItem("riskora_demo",JSON.stringify({
+      grants,
+      expenses,
+      requirements,
+      budgetLines
+    }));
+  }catch(error){
+    console.error("Erreur de sauvegarde",error);
+  }
 function load(){
- try{const d=JSON.parse(localStorage.getItem("riskora_demo")||"{}");grants=d.grants||[];expenses=d.expenses||[];requirements=d.requirements||[]}catch(e){}
+  try{
+    const d=JSON.parse(
+      localStorage.getItem("riskora_demo")||"{}"
+    );
+
+    grants=d.grants||[];
+    expenses=d.expenses||[];
+    requirements=d.requirements||[];
+    budgetLines=d.budgetLines||[];
+  }catch(error){
+    grants=[];
+    expenses=[];
+    requirements=[];
+    budgetLines=[];
+  }
 }
 function render(){
  document.documentElement.lang=lang;
