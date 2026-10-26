@@ -527,5 +527,33 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
+ 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const bouton = document.getElementById("addGrant");
+  const formulaire = document.getElementById("grantFormPanel");
+  const form = document.getElementById("grantForm");
+  const titre = document.getElementById("grantFormTitle");
+  const identifiant = document.getElementById("grantId");
+
+  if (!bouton || !formulaire || !form) {
+    console.error("RISKORA : éléments du formulaire introuvables.");
+    return;
+  }
+
+  bouton.addEventListener("click", function () {
+    form.reset();
+
+    if (identifiant) identifiant.value = "";
+    if (titre) titre.textContent = "Nouvelle subvention";
+
+    formulaire.classList.remove("hidden");
+    formulaire.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  });
+});
+</script>
 </body>
 </html>
