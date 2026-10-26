@@ -262,7 +262,9 @@ function saveGrant(e,id){
  const old=grants.find(g=>g.id===id);
  const item={id:id||uid(),name:document.getElementById("gname").value.trim(),donor:document.getElementById("gdonor").value.trim(),project:document.getElementById("gproject").value.trim(),amount:Number(document.getElementById("gamount").value),currency:document.getElementById("gcurrency").value,start:document.getElementById("gstart").value,end:document.getElementById("gend").value,status:document.getElementById("gstatus").value};
  if(old)Object.assign(old,item);else grants.push(item);
- persist();go("grants");
+ localStorage.setItem("riskora_demo",JSON.stringify({
+  grants,expenses,requirements,budgetLines
+}));
 }
 function editGrant(id){page="grants";document.getElementById("main").innerHTML=grantPage(id)}
 function budgetPage(){
@@ -334,10 +336,17 @@ function render(){
  document.getElementById("langBtn").textContent=lang==="fr"?"EN":"FR";
  document.getElementById("tagline").textContent=lang==="fr"?"GRANT CONTROL · Gestion des subventions":"GRANT CONTROL · Grant Management";
  nav();
- const pages={dashboard:dashboard,grants:()=>grantPage(),budgets:budgetPage,expenses:expensePage,compliance:compliancePage};
+ const pages={
+  dashboard:dashboard,
+  grants:()=>grantPage(),
+  budgets:detailedBudgetPage,
+  expenses:expensePage,
+  compliance:compliancePage
+};
  document.getElementById("main").innerHTML=pages[page]();
 }
 load();render();
+budgetLines=d.budgetLines||[];
 </script>
 </body>
 </html>
