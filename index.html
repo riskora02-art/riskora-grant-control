@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -39,371 +38,801 @@ th{background:#f8fafc}
 .notice{background:#fff7ed;border:1px solid #fed7aa;padding:12px;border-radius:9px;font-size:13px;margin-bottom:15px}
 .rowbtn{display:flex;gap:6px;flex-wrap:wrap}
 small{color:var(--muted)}
-@media(max-width:650px){.layout{display:block}nav{width:100%;display:flex;overflow-x:auto;gap:4px;border-right:0;border-bottom:1px solid var(--line)}nav button{white-space:nowrap;width:auto;flex-shrink:0}main{padding:14px}header{padding:16px}.metric{font-size:21px}}
+@media(max-width:650px){
+.layout{display:block}
+nav{width:100%;display:flex;overflow-x:auto;gap:4px;border-right:0;border-bottom:1px solid var(--line)}
+nav button{white-space:nowrap;width:auto;flex-shrink:0}
+main{padding:14px}
+header{padding:16px}
+.metric{font-size:21px}
+}
 </style>
 </head>
 <body>
+
 <header>
  <div class="top">
-  <div><h1>RISKORA</h1><p id="tagline">GRANT CONTROL · Gestion des subventions</p></div>
+  <div>
+   <h1>RISKORA</h1>
+   <p id="tagline">GRANT CONTROL · Gestion des subventions</p>
+  </div>
   <button onclick="toggleLang()" id="langBtn">EN</button>
  </div>
 </header>
+
 <div class="layout">
  <nav id="nav"></nav>
  <main id="main"></main>
 </div>
+
 <script>
 const T={
 fr:{
-dashboard:"Tableau de bord",grants:"Bailleurs & subventions",
-budgets:"Budgets",expenses:"Dépenses",compliance:"Conformité",
-overview:"Vue d’ensemble",active:"Subventions",totalBudget:"Budget approuvé",
-spent:"Dépenses enregistrées",balance:"Solde budgétaire",
-recent:"Subventions enregistrées",newGrant:"Ajouter une subvention",
-grant:"Nom de la subvention",donor:"Bailleur",project:"Projet",
-currency:"Devise",amount:"Montant approuvé",start:"Date de début",
-end:"Date de fin",save:"Enregistrer",cancel:"Annuler",
-status:"Statut",actions:"Actions",empty:"Aucune donnée enregistrée.",
-budgetTitle:"Suivi budgétaire",grantSelect:"Subvention",
-line:"Ligne budgétaire",allocated:"Budget de la ligne",
-expenseTitle:"Enregistrer une dépense",date:"Date",category:"Catégorie",
-value:"Montant",reference:"Référence du justificatif",
-addExpense:"Enregistrer la dépense",expenseList:"Dépenses enregistrées",
-complianceTitle:"Exigences et conformité",requirement:"Exigence ou rapport",
-due:"Date limite",addRequirement:"Ajouter une exigence",
-requirements:"Échéances enregistrées",pending:"À suivre",
-edit:"Modifier",delete:"Supprimer",confirmDelete:"Supprimer cet élément ?",
-noGrant:"Créez d’abord une subvention.",all:"Toutes",
-remaining:"Disponible",used:"Utilisé",usage:"Consommation budgétaire",
+dashboard:"Tableau de bord",
+grants:"Bailleurs & subventions",
+budgets:"Budgets",
+expenses:"Dépenses",
+compliance:"Conformité",
+overview:"Vue d’ensemble",
+active:"Subventions",
+totalBudget:"Budget approuvé",
+spent:"Dépenses enregistrées",
+balance:"Solde budgétaire",
+recent:"Subventions enregistrées",
+newGrant:"Ajouter une subvention",
+grant:"Nom de la subvention",
+donor:"Bailleur",
+project:"Projet",
+currency:"Devise",
+amount:"Montant approuvé",
+start:"Date de début",
+end:"Date de fin",
+save:"Enregistrer",
+cancel:"Annuler",
+status:"Statut",
+actions:"Actions",
+empty:"Aucune donnée enregistrée.",
+budgetTitle:"Suivi budgétaire",
+grantSelect:"Subvention",
+line:"Ligne budgétaire",
+allocated:"Budget de la ligne",
+expenseTitle:"Enregistrer une dépense",
+date:"Date",
+category:"Catégorie",
+value:"Montant",
+reference:"Référence du justificatif",
+addExpense:"Enregistrer la dépense",
+expenseList:"Dépenses enregistrées",
+complianceTitle:"Exigences et conformité",
+requirement:"Exigence ou rapport",
+due:"Date limite",
+addRequirement:"Ajouter une exigence",
+requirements:"Échéances enregistrées",
+pending:"À suivre",
+edit:"Modifier",
+delete:"Supprimer",
+confirmDelete:"Supprimer cet élément ?",
+noGrant:"Créez d’abord une subvention.",
+all:"Toutes",
+remaining:"Disponible",
+used:"Utilisé",
+usage:"Consommation budgétaire",
 note:"Prototype de démonstration. N’utilisez pas de données confidentielles.",
 required:"Veuillez remplir les champs obligatoires.",
 over:"Attention : les dépenses dépassent le budget enregistré.",
-donorReport:"Rapport bailleur",documents:"Justificatifs",
-other:"Autre",activeStatus:"Active",closed:"Clôturée",
-grantSaved:"Subvention enregistrée.",expenseSaved:"Dépense enregistrée.",
-requirementSaved:"Exigence enregistrée.",deleteLabel:"Supprimer",
-demo:"Données de démonstration",noBudget:"Aucune ligne budgétaire définie."
+donorReport:"Rapport bailleur",
+documents:"Justificatifs",
+other:"Autre",
+activeStatus:"Active",
+closed:"Clôturée",
+grantSaved:"Subvention enregistrée.",
+expenseSaved:"Dépense enregistrée.",
+requirementSaved:"Exigence enregistrée.",
+deleteLabel:"Supprimer",
+demo:"Données de démonstration",
+noBudget:"Aucune ligne budgétaire définie."
 },
 en:{
-dashboard:"Dashboard",grants:"Donors & grants",budgets:"Budgets",
-expenses:"Expenses",compliance:"Compliance",overview:"Overview",
-active:"Grants",totalBudget:"Approved budget",spent:"Recorded expenses",
-balance:"Budget balance",recent:"Registered grants",newGrant:"Add a grant",
-grant:"Grant name",donor:"Donor",project:"Project",currency:"Currency",
-amount:"Approved amount",start:"Start date",end:"End date",save:"Save",
-cancel:"Cancel",status:"Status",actions:"Actions",empty:"No data recorded.",
-budgetTitle:"Budget tracking",grantSelect:"Grant",line:"Budget line",
-allocated:"Allocated budget",expenseTitle:"Record an expense",date:"Date",
-category:"Category",value:"Amount",reference:"Supporting document reference",
-addExpense:"Record expense",expenseList:"Recorded expenses",
-complianceTitle:"Requirements & compliance",requirement:"Requirement or report",
-due:"Due date",addRequirement:"Add requirement",requirements:"Recorded deadlines",
-pending:"To follow up",edit:"Edit",delete:"Delete",
-confirmDelete:"Delete this item?",noGrant:"Create a grant first.",
-all:"All",remaining:"Available",used:"Used",usage:"Budget consumption",
+dashboard:"Dashboard",
+grants:"Donors & grants",
+budgets:"Budgets",
+expenses:"Expenses",
+compliance:"Compliance",
+overview:"Overview",
+active:"Grants",
+totalBudget:"Approved budget",
+spent:"Recorded expenses",
+balance:"Budget balance",
+recent:"Registered grants",
+newGrant:"Add a grant",
+grant:"Grant name",
+donor:"Donor",
+project:"Project",
+currency:"Currency",
+amount:"Approved amount",
+start:"Start date",
+end:"End date",
+save:"Save",
+cancel:"Cancel",
+status:"Status",
+actions:"Actions",
+empty:"No data recorded.",
+budgetTitle:"Budget tracking",
+grantSelect:"Grant",
+line:"Budget line",
+allocated:"Allocated budget",
+expenseTitle:"Record an expense",
+date:"Date",
+category:"Category",
+value:"Amount",
+reference:"Supporting document reference",
+addExpense:"Record expense",
+expenseList:"Recorded expenses",
+complianceTitle:"Requirements & compliance",
+requirement:"Requirement or report",
+due:"Due date",
+addRequirement:"Add requirement",
+requirements:"Recorded deadlines",
+pending:"To follow up",
+edit:"Edit",
+delete:"Delete",
+confirmDelete:"Delete this item?",
+noGrant:"Create a grant first.",
+all:"All",
+remaining:"Available",
+used:"Used",
+usage:"Budget consumption",
 note:"Demonstration prototype. Do not use confidential data.",
 required:"Please fill in the required fields.",
 over:"Warning: expenses exceed the recorded budget.",
-donorReport:"Donor report",documents:"Supporting documents",
-other:"Other",activeStatus:"Active",closed:"Closed",
-grantSaved:"Grant saved.",expenseSaved:"Expense saved.",
-requirementSaved:"Requirement saved.",deleteLabel:"Delete",
-demo:"Demo data",noBudget:"No budget lines defined."
-}};
-let lang="fr",page="dashboard";
-let grants=[],expenses=[],requirements=[],budgetLines=[];
-
-function addBudgetLine(event){
-  event.preventDefault();
-
-  const grantId = document.getElementById("blGrant").value;
-  const name = document.getElementById("blName").value.trim();
-  const amount = Number(document.getElementById("blAmount").value);
-  const currency = grants.find(g => g.id === grantId)?.currency || "USD";
-
-  if(!grantId || !name || amount < 0) return;
-
-  budgetLines.push({
-    id: uid(),
-    grantId,
-    name,
-    amount,
-    currency
-  });
-
-  persist();
-  go("budgets");
+donorReport:"Donor report",
+documents:"Supporting documents",
+other:"Other",
+activeStatus:"Active",
+closed:"Closed",
+grantSaved:"Grant saved.",
+expenseSaved:"Expense saved.",
+requirementSaved:"Requirement saved.",
+deleteLabel:"Delete",
+demo:"Demo data",
+noBudget:"No budget lines defined."
 }
+};
 
-function lineSpent(lineId){
-  return expenses
-    .filter(e => e.budgetLineId === lineId)
-    .reduce((sum,e) => sum + Number(e.amount || 0),0);
-}
+let lang="fr";
+let page="dashboard";
+let grants=[];
+let expenses=[];
+let requirements=[];
+let budgetLines=[];
 
-function detailedBudgetPage(){
-  const form = grants.length ? `
-    <div class="card">
-      <h3>Ajouter une ligne budgétaire</h3>
-      <form onsubmit="addBudgetLine(event)">
-        <label>Subvention</label>
-        <select id="blGrant" required>${grantOptions()}</select>
-
-        <label>Libellé de la ligne</label>
-        <input id="blName" required
-          placeholder="Ex. : Personnel, Transport, Fournitures">
-
-        <label>Budget approuvé</label>
-        <input id="blAmount" type="number" min="0" step=".01" required>
-
-        <button class="primary">Ajouter la ligne</button>
-      </form>
-    </div>` : `<div class="card">${t("noGrant")}</div>`;
-
-  const rows = budgetLines.map(line => {
-    const spent = lineSpent(line.id);
-    const remaining = line.amount - spent;
-    return `<tr>
-      <td>${esc(grantName(line.grantId))}</td>
-      <td>${esc(line.name)}</td>
-      <td>${money(line.amount,line.currency)}</td>
-      <td>${money(spent,line.currency)}</td>
-      <td>${money(remaining,line.currency)}</td>
-      <td>${line.amount ? Math.round(spent/line.amount*100) : 0}%</td>
-      <td><button onclick="removeBudgetLine('${line.id}')">Supprimer</button></td>
-    </tr>`;
-  }).join("");
-
-  return `<h2>Suivi détaillé des budgets</h2>
-    ${form}
-    <div class="card">
-      <div class="tablewrap">
-        <table>
-          <tr>
-            <th>Subvention</th><th>Ligne budgétaire</th>
-            <th>Budget</th><th>Dépenses</th>
-            <th>Solde</th><th>Utilisation</th><th>Action</th>
-          </tr>
-          ${rows || `<tr><td colspan="7">Aucune ligne budgétaire enregistrée.</td></tr>`}
-        </table>
-      </div>
-    </div>`;
-}
-
-function removeBudgetLine(id){
-  if(!confirm("Supprimer cette ligne budgétaire ?")) return;
-  budgetLines = budgetLines.filter(line => line.id !== id);
-  persist();
-  go("budgets");
-}
 const t=k=>T[lang][k]||k;
+
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+}[c]));
+
 function money(n,c="USD"){
- try{return new Intl.NumberFormat(lang==="fr"?"fr-FR":"en-US",{style:"currency",currency:c,maximumFractionDigits:2}).format(n)}
- catch{return Number(n).toFixed(2)+" "+c}
+ try{
+  return new Intl.NumberFormat(
+   lang==="fr"?"fr-FR":"en-US",
+   {style:"currency",currency:c,maximumFractionDigits:2}
+  ).format(Number(n)||0);
+ }catch{
+  return (Number(n)||0).toFixed(2)+" "+c;
+ }
 }
-function totalBudget(){return grants.reduce((s,g)=>s+Number(g.amount||0),0)}
-function totalSpent(){return expenses.reduce((s,e)=>s+Number(e.amount||0),0)}
-function spentFor(id){return expenses.filter(e=>e.grantId===id).reduce((s,e)=>s+Number(e.amount||0),0)}
-function grantName(id){return grants.find(g=>g.id===id)?.name||"—"}
-function toggleLang(){lang=lang==="fr"?"en":"fr";render()}
-function go(p){page=p;render()}
+
+function totalBudget(){
+ return grants.reduce((s,g)=>s+Number(g.amount||0),0);
+}
+
+function totalSpent(){
+ return expenses.reduce((s,e)=>s+Number(e.amount||0),0);
+}
+
+function spentFor(id){
+ return expenses
+  .filter(e=>e.grantId===id)
+  .reduce((s,e)=>s+Number(e.amount||0),0);
+}
+
+function grantName(id){
+ return grants.find(g=>g.id===id)?.name||"—";
+}
+
+function toggleLang(){
+ lang=lang==="fr"?"en":"fr";
+ render();
+}
+
+function go(p){
+ page=p;
+ render();
+}
+
 function nav(){
  const items=["dashboard","grants","budgets","expenses","compliance"];
+
  document.getElementById("nav").innerHTML=items.map(p=>
- `<button class="${page===p?"active":""}" onclick="go('${p}')">${t(p)}</button>`
+  `<button class="${page===p?"active":""}" onclick="go('${p}')">${t(p)}</button>`
  ).join("");
 }
+
 function grantOptions(selected=""){
- return grants.map(g=>`<option value="${g.id}" ${g.id===selected?"selected":""}>${esc(g.name)} — ${esc(g.donor)}</option>`).join("");
+ return grants.map(g=>
+  `<option value="${g.id}" ${g.id===selected?"selected":""}>${esc(g.name)} — ${esc(g.donor)}</option>`
+ ).join("");
 }
+
 function dashboard(){
- const budget=totalBudget(),spent=totalSpent();
+ const budget=totalBudget();
+ const spent=totalSpent();
+
  return `<h2>${t("overview")}</h2>
  <div class="notice">${t("note")}</div>
+
  <div class="grid">
- <div class="card">${t("active")}<div class="metric">${grants.length}</div></div>
- <div class="card">${t("totalBudget")}<div class="metric">${money(budget)}</div></div>
- <div class="card">${t("spent")}<div class="metric">${money(spent)}</div></div>
- <div class="card">${t("balance")}<div class="metric">${money(budget-spent)}</div></div>
+  <div class="card">
+   ${t("active")}
+   <div class="metric">${grants.length}</div>
+  </div>
+
+  <div class="card">
+   ${t("totalBudget")}
+   <div class="metric">${money(budget)}</div>
+  </div>
+
+  <div class="card">
+   ${t("spent")}
+   <div class="metric">${money(spent)}</div>
+  </div>
+
+  <div class="card">
+   ${t("balance")}
+   <div class="metric">${money(budget-spent)}</div>
+  </div>
  </div>
- <div class="card"><h3>${t("recent")}</h3>${grantTable()}</div>
- <div class="card"><h3>${t("usage")}</h3>
- <p>${budget>0?Math.round(spent/budget*100)+"%":"0%"} ${t("used")}</p>
- <progress max="${Math.max(budget,1)}" value="${Math.min(spent,Math.max(budget,1))}" style="width:100%;height:18px"></progress>
- ${spent>budget?`<p class="danger">${t("over")}</p>`:""}</div>`;
+
+ <div class="card">
+  <h3>${t("recent")}</h3>
+  ${grantTable()}
+ </div>
+
+ <div class="card">
+  <h3>${t("usage")}</h3>
+  <p>${budget>0?Math.round(spent/budget*100)+"%":"0%"} ${t("used")}</p>
+  <progress max="${Math.max(budget,1)}"
+   value="${Math.min(spent,Math.max(budget,1))}"
+   style="width:100%;height:18px"></progress>
+  ${spent>budget?`<p class="danger">${t("over")}</p>`:""}
+ </div>`;
 }
+
 function grantTable(){
- if(!grants.length)return `<p>${t("empty")}</p>`;
- return `<div class="tablewrap"><table><tr><th>${t("grant")}</th><th>${t("donor")}</th><th>${t("amount")}</th><th>${t("status")}</th><th>${t("actions")}</th></tr>
- ${grants.map(g=>`<tr><td>${esc(g.name)}<br><small>${esc(g.project)}</small></td><td>${esc(g.donor)}</td><td>${money(g.amount,g.currency)}</td><td><span class="pill">${esc(g.status)}</span></td><td><button onclick="editGrant('${g.id}')">${t("edit")}</button> <button class="danger" onclick="removeItem('grant','${g.id}')">${t("delete")}</button></td></tr>`).join("")}
- </table></div>`;
+ if(!grants.length){
+  return `<p>${t("empty")}</p>`;
+ }
+
+ return `<div class="tablewrap">
+ <table>
+ <tr>
+  <th>${t("grant")}</th>
+  <th>${t("donor")}</th>
+  <th>${t("amount")}</th>
+  <th>${t("status")}</th>
+  <th>${t("actions")}</th>
+ </tr>
+
+ ${grants.map(g=>`
+ <tr>
+  <td>${esc(g.name)}<br><small>${esc(g.project)}</small></td>
+  <td>${esc(g.donor)}</td>
+  <td>${money(g.amount,g.currency)}</td>
+  <td><span class="pill">${esc(g.status)}</span></td>
+  <td>
+   <button onclick="editGrant('${g.id}')">${t("edit")}</button>
+   <button class="danger" onclick="removeItem('grant','${g.id}')">${t("delete")}</button>
+  </td>
+ </tr>`).join("")}
+
+ </table>
+ </div>`;
 }
+
 function grantPage(edit=null){
  const g=edit?grants.find(x=>x.id===edit):null;
+
  return `<h2>${t("grants")}</h2>
- <div class="card"><h3>${t("newGrant")}</h3>
- <form onsubmit="saveGrant(event,'${g?.id||""}')">
- <label>${t("grant")} *</label><input id="gname" value="${esc(g?.name||"")}" required>
- <label>${t("donor")} *</label><input id="gdonor" value="${esc(g?.donor||"")}" required>
- <label>${t("project")}</label><input id="gproject" value="${esc(g?.project||"")}">
- <label>${t("amount")} *</label><input id="gamount" type="number" min="0" step=".01" value="${g?.amount??""}" required>
- <label>${t("currency")}</label><select id="gcurrency">${["USD","HTG","EUR","CAD","GBP"].map(c=>`<option ${g?.currency===c?"selected":""}>${c}</option>`).join("")}</select>
- <label>${t("start")}</label><input id="gstart" type="date" value="${g?.start||""}">
- <label>${t("end")}</label><input id="gend" type="date" value="${g?.end||""}">
- <label>${t("status")}</label><select id="gstatus"><option>${t("activeStatus")}</option><option ${g?.status===t("closed")?"selected":""}>${t("closed")}</option></select>
- <div class="rowbtn"><button class="primary">${t("save")}</button><button type="button" onclick="go('grants')">${t("cancel")}</button></div>
- </form></div><div class="card">${grantTable()}</div>`;
+
+ <div class="card">
+  <h3>${t("newGrant")}</h3>
+
+  <form onsubmit="saveGrant(event,'${g?.id||""}')">
+   <label>${t("grant")} *</label>
+   <input id="gname" value="${esc(g?.name||"")}" required>
+
+   <label>${t("donor")} *</label>
+   <input id="gdonor" value="${esc(g?.donor||"")}" required>
+
+   <label>${t("project")}</label>
+   <input id="gproject" value="${esc(g?.project||"")}">
+
+   <label>${t("amount")} *</label>
+   <input id="gamount" type="number" min="0" step=".01" value="${g?.amount??""}" required>
+
+   <label>${t("currency")}</label>
+   <select id="gcurrency">
+    ${["USD","HTG","EUR","CAD","GBP"].map(c=>
+     `<option ${g?.currency===c?"selected":""}>${c}</option>`
+    ).join("")}
+   </select>
+
+   <label>${t("start")}</label>
+   <input id="gstart" type="date" value="${g?.start||""}">
+
+   <label>${t("end")}</label>
+   <input id="gend" type="date" value="${g?.end||""}">
+
+   <label>${t("status")}</label>
+   <select id="gstatus">
+    <option ${!g||g.status===t("activeStatus")?"selected":""}>${t("activeStatus")}</option>
+    <option ${g?.status===t("closed")?"selected":""}>${t("closed")}</option>
+   </select>
+
+   <div class="rowbtn">
+    <button class="primary">${t("save")}</button>
+    <button type="button" onclick="go('grants')">${t("cancel")}</button>
+   </div>
+  </form>
+ </div>
+
+ <div class="card">${grantTable()}</div>`;
 }
 
 function saveGrant(e,id){
-  e.preventDefault();
+ e.preventDefault();
 
-  const old=grants.find(g=>g.id===id);
-  const item={
-    id:id||uid(),
-    name:document.getElementById("gname").value.trim(),
-    donor:document.getElementById("gdonor").value.trim(),
-    project:document.getElementById("gproject").value.trim(),
-    amount:Number(document.getElementById("gamount").value),
-    currency:document.getElementById("gcurrency").value,
-    start:document.getElementById("gstart").value,
-    end:document.getElementById("gend").value,
-    status:document.getElementById("gstatus").value
-  };
+ const old=grants.find(g=>g.id===id);
 
-  if(old) Object.assign(old,item);
-  else grants.push(item);
+ const item={
+  id:id||uid(),
+  name:document.getElementById("gname").value.trim(),
+  donor:document.getElementById("gdonor").value.trim(),
+  project:document.getElementById("gproject").value.trim(),
+  amount:Number(document.getElementById("gamount").value),
+  currency:document.getElementById("gcurrency").value,
+  start:document.getElementById("gstart").value,
+  end:document.getElementById("gend").value,
+  status:document.getElementById("gstatus").value
+ };
 
-  persist();
-  go("grants");
+ if(old){
+  Object.assign(old,item);
+ }else{
+  grants.push(item);
+ }
+
+ persist();
+ go("grants");
 }
 
-  e.preventDefault();
-
-  const old=grants.find(g=>g.id===id);
-  const item={
-    id:id||uid(),
-    name:document.getElementById("gname").value.trim(),
-    donor:document.getElementById("gdonor").value.trim(),
-    project:document.getElementById("gproject").value.trim(),
-    amount:Number(document.getElementById("gamount").value),
-    currency:document.getElementById("gcurrency").value,
-    start:document.getElementById("gstart").value,
-    end:document.getElementById("gend").value,
-    status:document.getElementById("gstatus").value
-  };
-
-  if(old) Object.assign(old,item);
-  else grants.push(item);
-
-  persist();
-  go("grants");
+function editGrant(id){
+ page="grants";
+ document.getElementById("main").innerHTML=grantPage(id);
 }
+
+function addBudgetLine(event){
+ event.preventDefault();
+
+ const grantId=document.getElementById("blGrant").value;
+ const name=document.getElementById("blName").value.trim();
+ const amount=Number(document.getElementById("blAmount").value);
+ const currency=grants.find(g=>g.id===grantId)?.currency||"USD";
+
+ if(!grantId||!name||!Number.isFinite(amount)||amount<0){
+  alert(t("required"));
+  return;
+ }
+
+ budgetLines.push({
+  id:uid(),
+  grantId,
+  name,
+  amount,
+  currency
+ });
+
+ persist();
+ go("budgets");
 }
-function editGrant(id){page="grants";document.getElementById("main").innerHTML=grantPage(id)}
+
+function lineSpent(lineId){
+ return expenses
+  .filter(e=>e.budgetLineId===lineId)
+  .reduce((sum,e)=>sum+Number(e.amount||0),0);
+}
+
+function detailedBudgetPage(){
+ const form=grants.length?`
+ <div class="card">
+  <h3>Ajouter une ligne budgétaire</h3>
+
+  <form onsubmit="addBudgetLine(event)">
+   <label>Subvention</label>
+   <select id="blGrant" required>${grantOptions()}</select>
+
+   <label>Libellé de la ligne</label>
+   <input id="blName" required placeholder="Ex. : Personnel, Transport, Fournitures">
+
+   <label>Budget approuvé</label>
+   <input id="blAmount" type="number" min="0" step=".01" required>
+
+   <button class="primary">Ajouter la ligne</button>
+  </form>
+ </div>`:`<div class="card">${t("noGrant")}</div>`;
+
+ const rows=budgetLines.map(line=>{
+  const spent=lineSpent(line.id);
+  const remaining=line.amount-spent;
+
+  return `<tr>
+   <td>${esc(grantName(line.grantId))}</td>
+   <td>${esc(line.name)}</td>
+   <td>${money(line.amount,line.currency)}</td>
+   <td>${money(spent,line.currency)}</td>
+   <td>${money(remaining,line.currency)}</td>
+   <td>${line.amount?Math.round(spent/line.amount*100):0}%</td>
+   <td><button onclick="removeBudgetLine('${line.id}')">Supprimer</button></td>
+  </tr>`;
+ }).join("");
+
+ return `<h2>Suivi détaillé des budgets</h2>
+ ${form}
+
+ <div class="card">
+  <div class="tablewrap">
+   <table>
+    <tr>
+     <th>Subvention</th>
+     <th>Ligne budgétaire</th>
+     <th>Budget</th>
+     <th>Dépenses</th>
+     <th>Solde</th>
+     <th>Utilisation</th>
+     <th>Action</th>
+    </tr>
+    ${rows||`<tr><td colspan="7">Aucune ligne budgétaire enregistrée.</td></tr>`}
+   </table>
+  </div>
+ </div>`;
+}
+
+function removeBudgetLine(id){
+ if(!confirm("Supprimer cette ligne budgétaire ?"))return;
+
+ budgetLines=budgetLines.filter(line=>line.id!==id);
+
+ expenses=expenses.map(e=>
+  e.budgetLineId===id?({...e,budgetLineId:""}):e
+ );
+
+ persist();
+ go("budgets");
+}
+
 function budgetPage(){
- if(!grants.length)return `<h2>${t("budgetTitle")}</h2><div class="card">${t("noGrant")}</div>`;
- return `<h2>${t("budgetTitle")}</h2><div class="card"><div class="tablewrap"><table>
- <tr><th>${t("grant")}</th><th>${t("totalBudget")}</th><th>${t("spent")}</th><th>${t("remaining")}</th><th>${t("usage")}</th></tr>
- ${grants.map(g=>{let s=spentFor(g.id),b=Number(g.amount);return `<tr><td>${esc(g.name)}</td><td>${money(b,g.currency)}</td><td>${money(s,g.currency)}</td><td>${money(b-s,g.currency)}</td><td>${b?Math.round(s/b*100):0}%</td></tr>`}).join("")}
- </table></div></div>
- <div class="card"><h3>${t("note")}</h3><p>${t("line")}: ${t("noBudget")}</p></div>`;
+ if(!grants.length){
+  return `<h2>${t("budgetTitle")}</h2><div class="card">${t("noGrant")}</div>`;
+ }
+
+ return `<h2>${t("budgetTitle")}</h2>
+ <div class="card">
+  <div class="tablewrap">
+   <table>
+    <tr>
+     <th>${t("grant")}</th>
+     <th>${t("totalBudget")}</th>
+     <th>${t("spent")}</th>
+     <th>${t("remaining")}</th>
+     <th>${t("usage")}</th>
+    </tr>
+
+    ${grants.map(g=>{
+     let s=spentFor(g.id),b=Number(g.amount);
+     return `<tr>
+      <td>${esc(g.name)}</td>
+      <td>${money(b,g.currency)}</td>
+      <td>${money(s,g.currency)}</td>
+      <td>${money(b-s,g.currency)}</td>
+      <td>${b?Math.round(s/b*100):0}%</td>
+     </tr>`;
+    }).join("")}
+   </table>
+  </div>
+ </div>
+
+ <div class="card">
+  <h3>${t("note")}</h3>
+  <p>${t("line")}: ${t("noBudget")}</p>
+ </div>`;
 }
+
 function expensePage(){
  return `<h2>${t("expenses")}</h2>
- <div class="card"><h3>${t("expenseTitle")}</h3>
- ${grants.length?`<form onsubmit="saveExpense(event)">
- <label>${t("grantSelect")} *</label><select id="egrant" required>${grantOptions()}</select>
- <label>${t("date")} *</label><input id="edate" type="date" required>
- <label>${t("category")} *</label><input id="ecat" required>
- <label>${t("value")} *</label><input id="eamount" type="number" min=".01" step=".01" required>
- <label>${t("reference")}</label><input id="eref">
- <button class="primary">${t("addExpense")}</button></form>`:t("noGrant")}
+
+ <div class="card">
+  <h3>${t("expenseTitle")}</h3>
+
+  ${grants.length?`
+  <form onsubmit="saveExpense(event)">
+   <label>${t("grantSelect")} *</label>
+   <select id="egrant" required>${grantOptions()}</select>
+
+   <label>${t("date")} *</label>
+   <input id="edate" type="date" required>
+
+   <label>${t("category")} *</label>
+   <input id="ecat" required>
+
+   <label>${t("value")} *</label>
+   <input id="eamount" type="number" min=".01" step=".01" required>
+
+   <label>${t("reference")}</label>
+   <input id="eref">
+
+   <label>Ligne budgétaire</label>
+   <select id="ebudget">
+    <option value="">-- Choisir une ligne --</option>
+   </select>
+
+   <button class="primary">${t("addExpense")}</button>
+  </form>`:t("noGrant")}
  </div>
- <div class="card"><h3>${t("expenseList")}</h3>${expenseTable()}</div>`;
+
+ <div class="card">
+  <h3>${t("expenseList")}</h3>
+  ${expenseTable()}
+ </div>`;
 }
+
+function updateExpenseBudgetOptions(){
+ const grantId=document.getElementById("egrant")?.value;
+ const select=document.getElementById("ebudget");
+
+ if(!select)return;
+
+ const current=budgetLines.filter(line=>line.grantId===grantId);
+
+ select.innerHTML=
+  '<option value="">-- Choisir une ligne --</option>'+
+  current.map(line=>
+   `<option value="${line.id}">${esc(line.name)}</option>`
+  ).join("");
+}
+
 function expenseTable(){
- if(!expenses.length)return `<p>${t("empty")}</p>`;
- return `<div class="tablewrap"><table><tr><th>${t("grant")}</th><th>${t("date")}</th><th>${t("category")}</th><th>${t("value")}</th><th>${t("reference")}</th><th></th></tr>
- ${expenses.map(e=>`<tr><td>${esc(grantName(e.grantId))}</td><td>${esc(e.date)}</td><td>${esc(e.category)}</td><td>${money(e.amount,grants.find(g=>g.id===e.grantId)?.currency||"USD")}</td><td>${esc(e.reference)}</td><td><button class="danger" onclick="removeItem('expense','${e.id}')">${t("delete")}</button></td></tr>`).join("")}</table></div>`;
+ if(!expenses.length){
+  return `<p>${t("empty")}</p>`;
+ }
+
+ return `<div class="tablewrap">
+ <table>
+  <tr>
+   <th>${t("grant")}</th>
+   <th>${t("date")}</th>
+   <th>${t("category")}</th>
+   <th>${t("value")}</th>
+   <th>${t("reference")}</th>
+   <th></th>
+  </tr>
+
+  ${expenses.map(e=>`
+  <tr>
+   <td>${esc(grantName(e.grantId))}</td>
+   <td>${esc(e.date)}</td>
+   <td>${esc(e.category)}</td>
+   <td>${money(e.amount,grants.find(g=>g.id===e.grantId)?.currency||"USD")}</td>
+   <td>${esc(e.reference)}</td>
+   <td><button class="danger" onclick="removeItem('expense','${e.id}')">${t("delete")}</button></td>
+  </tr>`).join("")}
+ </table>
+ </div>`;
 }
+
 function saveExpense(e){
  e.preventDefault();
+
  const grantId=document.getElementById("egrant").value;
- const item={id:uid(),grantId,date:document.getElementById("edate").value,category:document.getElementById("ecat").value.trim(),amount:Number(document.getElementById("eamount").value),reference:document.getElementById("eref").value.trim()};
- expenses.push(item);persist();go("expenses");
+ const budgetLineId=document.getElementById("ebudget")?.value||"";
+
+ const item={
+  id:uid(),
+  grantId,
+  budgetLineId,
+  date:document.getElementById("edate").value,
+  category:document.getElementById("ecat").value.trim(),
+  amount:Number(document.getElementById("eamount").value),
+  reference:document.getElementById("eref").value.trim()
+ };
+
+ expenses.push(item);
+ persist();
+ go("expenses");
 }
+
 function compliancePage(){
- return `<h2>${t("complianceTitle")}</h2><div class="card">
- <form onsubmit="saveRequirement(event)">
- <label>${t("grantSelect")} *</label><select id="rgrant" required>${grants.length?grantOptions():"<option value=''>"+t("noGrant")+"</option>"}</select>
- <label>${t("requirement")} *</label><input id="rname" required>
- <label>${t("due")} *</label><input id="rdue" type="date" required>
- <label>${t("status")}</label><select id="rstatus"><option>${t("pending")}</option><option>${t("donorReport")}</option><option>${t("documents")}</option></select>
- <button class="primary" ${grants.length?"":"disabled"}>${t("addRequirement")}</button>
- </form></div><div class="card"><h3>${t("requirements")}</h3>${requirementTable()}</div>`;
+ return `<h2>${t("complianceTitle")}</h2>
+
+ <div class="card">
+  <form onsubmit="saveRequirement(event)">
+   <label>${t("grantSelect")} *</label>
+   <select id="rgrant" required>
+    ${grants.length?grantOptions():"<option value=''>"+t("noGrant")+"</option>"}
+   </select>
+
+   <label>${t("requirement")} *</label>
+   <input id="rname" required>
+
+   <label>${t("due")} *</label>
+   <input id="rdue" type="date" required>
+
+   <label>${t("status")}</label>
+   <select id="rstatus">
+    <option>${t("pending")}</option>
+    <option>${t("donorReport")}</option>
+    <option>${t("documents")}</option>
+   </select>
+
+   <button class="primary" ${grants.length?"":"disabled"}>${t("addRequirement")}</button>
+  </form>
+ </div>
+
+ <div class="card">
+  <h3>${t("requirements")}</h3>
+  ${requirementTable()}
+ </div>`;
 }
+
 function requirementTable(){
- if(!requirements.length)return `<p>${t("empty")}</p>`;
- return `<div class="tablewrap"><table><tr><th>${t("grant")}</th><th>${t("requirement")}</th><th>${t("due")}</th><th>${t("status")}</th><th></th></tr>
- ${requirements.map(r=>`<tr><td>${esc(grantName(r.grantId))}</td><td>${esc(r.name)}</td><td>${esc(r.due)}</td><td>${esc(r.status)}</td><td><button class="danger" onclick="removeItem('requirement','${r.id}')">${t("delete")}</button></td></tr>`).join("")}</table></div>`;
+ if(!requirements.length){
+  return `<p>${t("empty")}</p>`;
+ }
+
+ return `<div class="tablewrap">
+ <table>
+  <tr>
+   <th>${t("grant")}</th>
+   <th>${t("requirement")}</th>
+   <th>${t("due")}</th>
+   <th>${t("status")}</th>
+   <th></th>
+  </tr>
+
+  ${requirements.map(r=>`
+  <tr>
+   <td>${esc(grantName(r.grantId))}</td>
+   <td>${esc(r.name)}</td>
+   <td>${esc(r.due)}</td>
+   <td>${esc(r.status)}</td>
+   <td><button class="danger" onclick="removeItem('requirement','${r.id}')">${t("delete")}</button></td>
+  </tr>`).join("")}
+ </table>
+ </div>`;
 }
+
 function saveRequirement(e){
- e.preventDefault();requirements.push({id:uid(),grantId:document.getElementById("rgrant").value,name:document.getElementById("rname").value.trim(),due:document.getElementById("rdue").value,status:document.getElementById("rstatus").value});persist();go("compliance");
+ e.preventDefault();
+
+ requirements.push({
+  id:uid(),
+  grantId:document.getElementById("rgrant").value,
+  name:document.getElementById("rname").value.trim(),
+  due:document.getElementById("rdue").value,
+  status:document.getElementById("rstatus").value
+ });
+
+ persist();
+ go("compliance");
 }
+
 function removeItem(type,id){
  if(!confirm(t("confirmDelete")))return;
- if(type==="grant"){grants=grants.filter(x=>x.id!==id);expenses=expenses.filter(x=>x.grantId!==id);requirements=requirements.filter(x=>x.grantId!==id)}
- if(type==="expense")expenses=expenses.filter(x=>x.id!==id);
- if(type==="requirement")requirements=requirements.filter(x=>x.id!==id);
- persist();render();
-}
-function persist(){
-  try{
-    localStorage.setItem("riskora_demo",JSON.stringify({
-      grants,
-      expenses,
-      requirements,
-      budgetLines
-    }));
-  }catch(error){
-    console.error("Erreur de sauvegarde",error);
-  }
-function load(){
-  try{
-    const d=JSON.parse(
-      localStorage.getItem("riskora_demo")||"{}"
-    );
 
-    grants=d.grants||[];
-    expenses=d.expenses||[];
-    requirements=d.requirements||[];
-    budgetLines=d.budgetLines||[];
-  }catch(error){
-    grants=[];
-    expenses=[];
-    requirements=[];
-    budgetLines=[];
-  }
+ if(type==="grant"){
+  const grantLineIds=budgetLines
+   .filter(line=>line.grantId===id)
+   .map(line=>line.id);
+
+  grants=grants.filter(x=>x.id!==id);
+
+  expenses=expenses.filter(x=>
+   x.grantId!==id&&!grantLineIds.includes(x.budgetLineId)
+  );
+
+  requirements=requirements.filter(x=>x.grantId!==id);
+
+  budgetLines=budgetLines.filter(line=>line.grantId!==id);
+ }
+
+ if(type==="expense"){
+  expenses=expenses.filter(x=>x.id!==id);
+ }
+
+ if(type==="requirement"){
+  requirements=requirements.filter(x=>x.id!==id);
+ }
+
+ persist();
+ render();
 }
+
+function persist(){
+ try{
+  localStorage.setItem("riskora_demo",JSON.stringify({
+   grants,
+   expenses,
+   requirements,
+   budgetLines
+  }));
+ }catch(error){
+  console.error("Erreur de sauvegarde",error);
+ }
+}
+
+function load(){
+ try{
+  const d=JSON.parse(localStorage.getItem("riskora_demo")||"{}");
+  grants=d.grants||[];
+  expenses=d.expenses||[];
+  requirements=d.requirements||[];
+  budgetLines=d.budgetLines||[];
+ }catch(error){
+  grants=[];
+  expenses=[];
+  requirements=[];
+  budgetLines=[];
+ }
+}
+
 function render(){
  document.documentElement.lang=lang;
  document.getElementById("langBtn").textContent=lang==="fr"?"EN":"FR";
- document.getElementById("tagline").textContent=lang==="fr"?"GRANT CONTROL · Gestion des subventions":"GRANT CONTROL · Grant Management";
+
+ document.getElementById("tagline").textContent=
+  lang==="fr"
+  ?"GRANT CONTROL · Gestion des subventions"
+  :"GRANT CONTROL · Grant Management";
+
  nav();
+
  const pages={
   dashboard:dashboard,
   grants:()=>grantPage(),
   budgets:detailedBudgetPage,
   expenses:expensePage,
   compliance:compliancePage
-};
+ };
+
  document.getElementById("main").innerHTML=pages[page]();
+
+ if(page==="expenses"){
+  document.getElementById("egrant")?.addEventListener(
+   "change",
+   updateExpenseBudgetOptions
+  );
+  updateExpenseBudgetOptions();
+ }
 }
-load();render();
+
+load();
+render();
 </script>
 </body>
 </html>
